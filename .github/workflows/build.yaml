@@ -1,0 +1,30 @@
+# This is a basic workflow to help you get started with Actions
+name: build
+
+on: push
+
+env:
+  JAVA_ENV_VERSION: '21'
+
+jobs:
+
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setting up Java for running mvn
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JAVA_ENV_VERSION}}
+          distribution: 'adopt'
+          cache: 'maven'
+
+      # Building the turnkey artefact
+      - name: Create executable jar with Maven
+        run: mvn clean package -DskipTests
