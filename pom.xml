@@ -9,7 +9,7 @@
 
   <groupId>io.github.ace-lectures.2aa4</groupId>
   <!-- Replace this with your MacId. E.g., mine would be a1-mossers -->
-  <artifactId>a1-STUDENT_MAC_ID_GOES_HERE</artifactId>
+  <artifactId>a1-davam</artifactId>
   <version>1.0</version>
   <name>McMaster :: SFWRENG :: 2AA4 :: Maze Runner</name>
 
