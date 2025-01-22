@@ -10,7 +10,7 @@ import org.apache.commons.cli.*;
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
-
+    private Maze maze;
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
         Options options = new Options();
@@ -22,22 +22,9 @@ public class Main {
             if (cmd.hasOption("i")) {
                 String inputFile = cmd.getOptionValue("i");
                 logger.info("**** Reading the maze from file " + inputFile);
-                BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    for (int idx = 0; idx < line.length(); idx++) {
-                        if (line.charAt(idx) == '#') {
-                            logger.info("WALL ");
-                        } else if (line.charAt(idx) == ' ') {
-                            logger.info("PASS ");
-                        }
-                    }
-                    logger.info(System.lineSeparator());
-                }
-                reader.close();
+                maze = new Maze(inputFile);
             } else {
                 logger.error("Input file not provided. Use -i flag to specify the input file.");
-                return ;
             }
         } catch (ParseException e) {
             logger.error("Failed to parse command line arguments", e);
