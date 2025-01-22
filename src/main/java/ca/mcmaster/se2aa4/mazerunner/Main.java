@@ -37,6 +37,7 @@ public class Main {
                 reader.close();
             } else {
                 logger.error("Input file not provided. Use -i flag to specify the input file.");
+                return ;
             }
         } catch (ParseException e) {
             logger.error("Failed to parse command line arguments", e);
