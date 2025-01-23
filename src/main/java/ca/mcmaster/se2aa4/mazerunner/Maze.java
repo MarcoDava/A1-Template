@@ -34,9 +34,11 @@ public class Maze{
     public String[][] getMazeArray(){
         return mazeArray;
     }
+
     public void setMazeArray(String[][] mazeArray){
         this.mazeArray = mazeArray;
     }
+
     public void printMaze(){
         for (int i = 0; i < mazeArray.length; i++){
             for (int j = 0; j < mazeArray[i].length; j++){
@@ -45,6 +47,7 @@ public class Maze{
             logger.info(System.lineSeparator());
         }
     }
+
     public int[] getEntryPoint(){
         for(int i=0; i<mazeArray.length();i++){
             if(mazeArray[i][0].equals(" ")){
@@ -55,6 +58,7 @@ public class Maze{
             }
         }
     }
+
     public int[] getExitPoint(){
         for(int i=0; i<mazeArray.length();i++){
             if(mazeArray[i][mazeArray.length()-1].equals(" ")){
@@ -64,6 +68,6 @@ public class Maze{
                 return null;
             }
         }
+        return;
     }
-
 }

@@ -7,8 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MazeRunner{
-    private Stack<String> CanonizedPath = new Stack<>();
-    private Stack<int[]> ForkLocations = new Stack<>();
+    private String CanonizedPath = "";
+    private int[][] ForkLocations = new int[][];//MAKE THIS A MAP, AND THIS WILL BE ABLE TO TRACK IF A FORK HAS BEEN FULLY EXPLORED, ADD 1 TO THE VALUE EVERY TIME THE LOCATION HAS BEEN EXPLORED.
+    private int[] forkVisits = new int[];
     private int[] position = new int[2];//change at some point
     private int[] finishArea = new int[2];//change at some point
     private String[][] mazeArray;
@@ -20,18 +21,16 @@ public class MazeRunner{
     public MazeRunner(String[][] mazeArray, int[] entryPoint, int[] finishArea){
         position = entryPoint;
         this.finishArea = finishArea;
-        this.mazeArray=mazeArray;
+        this.mazeArray = mazeArray;
     }
 
     public MazeRunnerAlgorithm(String[][] mazeArray){
-
         while(!isFinish(position)){
             if(isFork(position)){
-                ForkLocations.push(position);
                 if(!isWall(peekLeft())){
                     turnLeft();
                 }
-                else if{
+                else{
                     moveForward();
                 }
             }
@@ -54,40 +53,57 @@ public class MazeRunner{
     }
 
     public void addPath(String value){
-        CanonizedPath.push(value);
+        CanonizedPath=CanonizedPath+value;
     }
 
     public void deletePath(){
-        CanonizedPath.pop();
+        if (CanonizedPath != null && str.length() > 0) {
+            CanonizedPath = CanonizedPath.substring(0, CanonizedPath.length() - 1);
+        }
     }
 
     public void backTrackToFork(){
-        while(position!=ForkLocations.peek()){
-            deletePath();
+        turnLeft();
+        turnLeft();
+        while(position!=ForkLocations[ForkLocations.length()-1]){
+            if(!isWall(peekForward())){
+                moveForward();
+                addPath("F");
+            }
+            else if(!isWall(peekLeft())){
+                turnLeft();
+                moveForward();
+                addPath("LF");
+            }
+            else{
+                turnRight();
+                moveForward();
+                addPath("RF");
+            }
         }
-        ForkLocations.pop();
     }
 
     public boolean isDeadend(int[] position){
-        int row,col = position[0],position[1];
+        int row = position[0];
+        int col = position[1];
         int walls = 0;
         if(row>0){
-            if(!isWall(mazeArray,row-1,col)){
+            if(!isWall(row-1,col)){
                 walls++;
             }
         }
         if(col>0){
-            if(!isWall(mazeArray,row,col-1)){
+            if(!isWall(row,col-1)){
                 walls++;
             }
         }
         if(row<mazeArray.length-1){
-            if(!isWall(mazeArray,row+1,col)){
+            if(!isWall(row+1,col)){
                 walls++;
             }
         }
         if(col<mazeArray[0].length-1){
-            if(!isWall(mazeArray,row,col+1)){
+            if(!isWall(row,col+1)){
                 walls++;
             }
         }
@@ -100,7 +116,8 @@ public class MazeRunner{
     }
 
     public boolean isWall(int[] position){
-        int row,col=position[0],position[1];
+        int row = position[0];
+        int col = position[1];
         if(mazeArray[row][col].equals("#")){
             return true;
         }
@@ -110,7 +127,8 @@ public class MazeRunner{
     }
 
     public boolean isFinish(int[] position){
-        int row,col=position[0],position[1];
+        int row = position[0];
+        int col = position[1];
         if(position==finishArea){
             return true;
         }
@@ -122,6 +140,18 @@ public class MazeRunner{
     public boolean isFork( int[] position){
         int openPaths = amountOfPaths(position);
         if(openPaths>2){
+            boolean exploredFork=false;
+            for(int i=0;i<ForkLocations.length;i++){
+                if(position==ForkLocation[i]){//implement this with java
+                    forkVisits[i]++;
+                    exploredFork=true;
+                }
+            }
+            if(!exploredFork){
+                ForkLocation.append(position);
+                forkVisits.append(1);
+            }
+        }
             return true;
         }
         else{
@@ -130,25 +160,26 @@ public class MazeRunner{
     }
 
     public int amountOfPaths(int[] position){
-        int row,col = position[0],position[1];
+        int row = position[0];
+        int col = position[1];
         int openPaths = 0;
         if(row>0){
-            if(!isWall(mazeArray,row-1,col)){
+            if(!isWall(row-1,col)){
                 openPaths++;
             }
         }
         if(col>0){
-            if(!isWall(mazeArray,row,col-1)){
+            if(!isWall(row,col-1)){
                 openPaths++;
             }
         }
         if(row<mazeArray.length-1){
-            if(!isWall(mazeArray,row+1,col)){
+            if(!isWall(row+1,col)){
                 openPaths++;
             }
         }
         if(col<mazeArray[0].length-1){
-            if(!isWall(mazeArray,row,col+1)){
+            if(!isWall(row,col+1)){
                 openPaths++;
             }
         }
@@ -270,9 +301,18 @@ public class MazeRunner{
 
     public String[] getFactorizedPath(){
         cananonizedPathArray = getPath();
-        factorizedPath
-        for(int i=0;i<CanonizedPath.size();i++){
-            
+        factorizedPath;
+        String target="";
+        int repeats=0;
+        for(int i=0;i<CanonizedPath.length()-1;i++){
+            if(target==CanonizedPath.substring(i,i+1)){
+                repeats++;
+            }
+            else{
+                FactorizedPath+=repeats+""+target;
+                target=CanonizedPath.substring(i,i+1);
+                repeats=1;
+            }
         }
     }
 }
