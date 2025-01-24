@@ -61,9 +61,11 @@ public class Maze{
 
     public int[] getExitPoint(){
         for(int i=0; i<mazeArray.length();i++){
+            
             if(mazeArray[i][mazeArray.length()-1].equals(" ")){
                 return new int[]{i,mazeArray.length()-1};
             }
+
             else{
                 return null;
             }

@@ -26,29 +26,31 @@ public class MazeRunner{
 
     public MazeRunnerAlgorithm(String[][] mazeArray){
         while(!isFinish(position)){
-            if(isFork(position)){
-                if(!isWall(peekLeft())){
-                    turnLeft();
-                }
-                else{
-                    moveForward();
-                }
-            }
-            if(isDeadend(position)){
-                backTrackToFork();
-                turnRight();
-            }
-            if(isWall(peekForward())){
-                if(isWall(peekLeft())){
-                    turnRight();
-                }
-                else{
-                    turnLeft();
-                }
-            }
-            else{
+            if(!isWall(peekForward())){
                 moveForward();
             }
+            else if(!isWall(peekLeft())){
+                turnLeft();
+                moveForward();
+            }
+            else if(!isWall(peekRight())){
+                turnRight();
+                moveForward();
+            }
+            else{
+                turnRight();
+                turnRight();
+            }
+            moves++;
+            if(moves>1000){
+                break;
+            }
+        }
+        if(isFinish(position)){
+            logger.info("Maze has been solved");
+        }
+        else{
+            logger.info("Maze has not been solved");
         }
     }
 
@@ -68,17 +70,14 @@ public class MazeRunner{
         while(position!=ForkLocations[ForkLocations.length()-1]){
             if(!isWall(peekForward())){
                 moveForward();
-                addPath("F");
             }
             else if(!isWall(peekLeft())){
                 turnLeft();
                 moveForward();
-                addPath("LF");
             }
             else{
                 turnRight();
                 moveForward();
-                addPath("RF");
             }
         }
     }
