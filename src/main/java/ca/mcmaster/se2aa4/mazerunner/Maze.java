@@ -79,4 +79,12 @@ public class Maze {
         }
         return null;
     }
+
+    public int getRowLength(){
+        return mazeArray.length;
+    }
+
+    public int getColLength(){
+        return mazeArray[0].length;
+    }
 }

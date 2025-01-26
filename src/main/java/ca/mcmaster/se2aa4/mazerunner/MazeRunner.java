@@ -13,15 +13,15 @@ public class MazeRunner {
     private int[] forkVisits;//will be used eventually, just not in the MVP
     private int[] position = new int[2];
     private int[] finishArea = new int[2];
-    private String[][] mazeArray;
+    private Maze mazeArray;
     private boolean facingNorth = false;
     private boolean facingSouth = false;
     private boolean facingEast = true;
     private boolean facingWest = false;
 
-    public MazeRunner(String[][] mazeArray, int[] entryPoint, int[] finishArea) {
-        position = entryPoint;
-        this.finishArea = finishArea;
+    public MazeRunner(Maze mazeArray) {
+        // position = entryPoint;
+        // this.finishArea = finishArea;
         this.mazeArray = mazeArray;
     }
 
@@ -94,10 +94,10 @@ public class MazeRunner {
         if (col > 0 && isWall(new int[]{row, col - 1})) {
             walls++;
         }
-        if (row < mazeArray.length - 1 && isWall(new int[]{row + 1, col})) {
+        if (row < mazeArray.getRowLength() - 1 && isWall(new int[]{row + 1, col})) {
             walls++;
         }
-        if (col < mazeArray[0].length - 1 && isWall(new int[]{row, col + 1})) {
+        if (col < mazeArray.getColLength() - 1 && isWall(new int[]{row, col + 1})) {
             walls++;
         }
         return walls > 2;
