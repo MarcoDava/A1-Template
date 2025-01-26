@@ -8,21 +8,20 @@ import java.util.Arrays;
 
 public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
+    private ForkLocations forkLocations= new ForkLocations();
     private String CanonizedPath = "";
-    private int[][] ForkLocations;
-    private int[] forkVisits;//will be used eventually, just not in the MVP
     private int[] position = new int[2];
     private int[] finishArea = new int[2];
-    private Maze mazeArray;
+    private Maze maze;
     private boolean facingNorth = false;
     private boolean facingSouth = false;
     private boolean facingEast = true;
     private boolean facingWest = false;
 
-    public MazeRunner(Maze mazeArray) {
+    public MazeRunner(Maze maze) {
         // position = entryPoint;
         // this.finishArea = finishArea;
-        this.mazeArray = mazeArray;
+        this.maze = maze;
     }
 
     public boolean MazeRunnerAlgorithm() {
@@ -65,23 +64,23 @@ public class MazeRunner {
         }
     }
 
-    public void backTrackToFork(){
-        turnLeft();
-        turnLeft();
-        while(position!=ForkLocations[ForkLocations.length-1]){
-            if(!isWall(peekForward())){
-                moveForward();
-            }
-            else if(!isWall(peekLeft())){
-                turnLeft();
-                moveForward();
-            }
-            else{
-                turnRight();
-                moveForward();
-            }
-        }
-    }
+    // public void backTrackToFork(){
+    //     turnLeft();
+    //     turnLeft();
+    //     while(position!=ForkLocations[ForkLocations.length-1]){
+    //         if(!isWall(peekForward())){
+    //             moveForward();
+    //         }
+    //         else if(!isWall(peekLeft())){
+    //             turnLeft();
+    //             moveForward();
+    //         }
+    //         else{
+    //             turnRight();
+    //             moveForward();
+    //         }
+    //     }
+    // }
 
 
     public boolean isDeadend(int[] position) {
@@ -94,10 +93,10 @@ public class MazeRunner {
         if (col > 0 && isWall(new int[]{row, col - 1})) {
             walls++;
         }
-        if (row < mazeArray.getRowLength() - 1 && isWall(new int[]{row + 1, col})) {
+        if (row < maze.getRowLength() - 1 && isWall(new int[]{row + 1, col})) {
             walls++;
         }
-        if (col < mazeArray.getColLength() - 1 && isWall(new int[]{row, col + 1})) {
+        if (col < maze.getColLength() - 1 && isWall(new int[]{row, col + 1})) {
             walls++;
         }
         return walls > 2;
@@ -106,7 +105,7 @@ public class MazeRunner {
     public boolean isWall(int[] position) {
         int row = position[0];
         int col = position[1];
-        if(mazeArray[row][col].equals("#")){
+        if(maze.getMazeIndex(row,col).equals("#")){
             return true;
         }
         return false;
@@ -116,27 +115,13 @@ public class MazeRunner {
         return Arrays.equals(position, finishArea);
     }
 
-    public boolean isFork( int[] position){
+    public boolean isFork(int[] position){
         int openPaths = amountOfPaths(position);
         if(openPaths>2){
-            boolean exploredFork=false;
-            for(int i=0;i<ForkLocations.length;i++){
-                if(position==ForkLocations[i]){//implement this with java
-                    forkVisits[i]++;
-                    exploredFork=true;
-                }
-            }
-            if(!exploredFork){
-                ForkLocations = Arrays.copyOf(ForkLocations, ForkLocations.length + 1);
-                ForkLocations[ForkLocations.length - 1] = position.clone();
-                forkVisits = Arrays.copyOf(forkVisits, forkVisits.length + 1);
-                forkVisits[forkVisits.length - 1] = 1;
-            }
+            forkLocations.addForkLocations(position);
             return true;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 
@@ -150,10 +135,10 @@ public class MazeRunner {
         if (col > 0 && !isWall(new int[]{row, col - 1})) {
             openPaths++;
         }
-        if (row < mazeArray.length - 1 && !isWall(new int[]{row + 1, col})) {
+        if (row < maze.getRowLength() - 1 && !isWall(new int[]{row + 1, col})) {
             openPaths++;
         }
-        if (col < mazeArray[0].length - 1 && !isWall(new int[]{row, col + 1})) {
+        if (col < maze.getColLength() - 1 && !isWall(new int[]{row, col + 1})) {
             openPaths++;
         }
         return openPaths;

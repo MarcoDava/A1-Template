@@ -87,4 +87,8 @@ public class Maze {
     public int getColLength(){
         return mazeArray[0].length;
     }
+
+    public String getMazeIndex(int row, int col){
+        return mazeArray[row][col];
+    }
 }
