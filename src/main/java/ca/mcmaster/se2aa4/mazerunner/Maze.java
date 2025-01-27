@@ -45,11 +45,11 @@ public class Maze {
         return mazeArray;
     }
 
-    public String[][] getMazeArray() {
+    public String[][] getMaze() {
         return mazeArray;
     }
 
-    public void setMazeArray(String[][] mazeArray) {
+    public void setMaze(String[][] mazeArray) {
         this.mazeArray = mazeArray;
     }
 
@@ -71,14 +71,14 @@ public class Maze {
         return null;
     }
 
-    public int[] getExitPoint() {
-        for (int i = 0; i < mazeArray.length; i++) {
-            if (mazeArray[i][mazeArray[i].length - 1].equals(" ")) {
-                return new int[]{i, mazeArray[i].length - 1};
-            }
-        }
-        return null;
-    }
+    // public int[] getExitPoint() {
+    //     for (int i = 0; i < mazeArray.length; i++) {
+    //         if (mazeArray[i][mazeArray[i].length - 1].equals(" ")) {
+    //             return new int[]{i, mazeArray[i].length - 1};
+    //         }
+    //     }
+    //     return null;
+    // }
 
     public int getRowLength(){
         return mazeArray.length;
