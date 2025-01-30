@@ -1,48 +1,39 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 
 public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
-    private ForkLocations forkLocations= new ForkLocations();
     private String CanonizedPath = "";
     private Position position=new Position();
     private Maze maze;
     private Exit exit=new Exit(maze);
-    private boolean facingNorth = false;
-    private boolean facingSouth = false;
-    private boolean facingEast = true;
-    private boolean facingWest = false;
 
     public MazeRunner(Maze maze) {
-        // position = entryPoint;
-        // this.finishArea = finishArea;
         this.maze = maze;
     }
 
     public boolean MazeRunnerAlgorithm() {
-        int moves = 0;
-        while (!exit.isFinish(position.getPosition())) {
-            if (!isWall(position.peekForward())) {
+
+        while (exit.getExitPoint()!=position.getPosition()) {
+            if (!isWall(position.peekRight())) {
+                position.turnRight();
                 position.moveForward();
-            } else if (!isWall(position.peekLeft())) {
-                turnLeft();
-                moveForward();
-            } else if (!isWall(peekRight())) {
-                turnRight();
-                moveForward();
-            } else {
-                turnRight();
-                turnRight();
             }
-            moves++;
-            if (moves > 1000) {
-                break;
+            else if(!isWall(position.peekForward())){
+                position.moveForward();
             }
+            else if(!isWall(position.peekLeft())){
+                position.turnLeft();
+                position.moveForward();
+            }
+            else if(isDeadend(position.getPosition())){
+                position.turnLeft();
+                position.turnLeft();
+            }
+            
         }
         if (position.getPosition()==exit.getExitPoint()) {
             logger.info("Maze has been solved");
@@ -64,25 +55,6 @@ public class MazeRunner {
         }
     }
 
-    // public void backTrackToFork(){
-    //     turnLeft();
-    //     turnLeft();
-    //     while(position!=ForkLocations[ForkLocations.length-1]){
-    //         if(!isWall(peekForward())){
-    //             moveForward();
-    //         }
-    //         else if(!isWall(peekLeft())){
-    //             turnLeft();
-    //             moveForward();
-    //         }
-    //         else{
-    //             turnRight();
-    //             moveForward();
-    //         }
-    //     }
-    // }
-
-
     public boolean isDeadend(int[] position) {
         int row = position[0];
         int col = position[1];
@@ -103,8 +75,8 @@ public class MazeRunner {
     }
 
     public boolean isWall(int[] position) {
-        int row = position[0];
-        int col = position[1];
+        int row=position[0];
+        int col=position[1];
         if(maze.getMazeIndex(row,col).equals("#")){
             return true;
         }
@@ -112,17 +84,17 @@ public class MazeRunner {
     }
 
     public boolean isFinish(int[] position) {
-        return Arrays.equals(position, finishArea);
+        return Arrays.equals(position, exit.getExitPoint());
     }
 
-    public boolean isFork(int[] position){
-        int openPaths = amountOfPaths(position);
-        if(openPaths>2){
-            forkLocations.addForkLocations(position);
-            return true;
-        }
-        return false;
-    }
+    // public boolean isFork(int[] position){
+    //     int openPaths = amountOfPaths(position);
+    //     if(openPaths>2){
+    //         forkLocations.addForkLocations(position);
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
 
     public int amountOfPaths(int[] position) {
@@ -143,44 +115,4 @@ public class MazeRunner {
         }
         return openPaths;
     }
-
-    public String[] getPath() {
-        return CanonizedPath.split("");
-    }
-
-    public void turnLeft() {
-        if (facingNorth) {
-            facingWest = true;
-            facingNorth = false;
-        } else if (facingSouth) {
-            facingEast = true;
-            facingSouth = false;
-        } else if (facingEast) {
-            facingNorth = true;
-            facingEast = false;
-        } else if (facingWest) {
-            facingSouth = true;
-            facingWest = false;
-        }
-        addPath("L");
-    }
-
-    public void turnRight() {
-        if (facingNorth) {
-            facingEast = true;
-            facingNorth = false;
-        } else if (facingSouth) {
-            facingWest = true;
-            facingSouth = false;
-        } else if (facingEast) {
-            facingSouth = true;
-            facingEast = false;
-        } else if (facingWest) {
-            facingNorth = true;
-            facingWest = false;
-        }
-        addPath("R");
-    }
-
-
 }
