@@ -10,9 +10,9 @@ public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
     private ForkLocations forkLocations= new ForkLocations();
     private String CanonizedPath = "";
-    private int[] position = new int[2];
-    private int[] finishArea = new int[2];
+    private Position position=new Position();
     private Maze maze;
+    private Exit exit=new Exit(maze);
     private boolean facingNorth = false;
     private boolean facingSouth = false;
     private boolean facingEast = true;
@@ -26,10 +26,10 @@ public class MazeRunner {
 
     public boolean MazeRunnerAlgorithm() {
         int moves = 0;
-        while (!isFinish(position)) {
-            if (!isWall(peekForward())) {
-                moveForward();
-            } else if (!isWall(peekLeft())) {
+        while (!exit.isFinish(position.getPosition())) {
+            if (!isWall(position.peekForward())) {
+                position.moveForward();
+            } else if (!isWall(position.peekLeft())) {
                 turnLeft();
                 moveForward();
             } else if (!isWall(peekRight())) {
@@ -44,7 +44,7 @@ public class MazeRunner {
                 break;
             }
         }
-        if (isFinish(position)) {
+        if (position.getPosition()==exit.getExitPoint()) {
             logger.info("Maze has been solved");
             logger.info("Path: " + CanonizedPath);
             return true;
@@ -144,60 +144,8 @@ public class MazeRunner {
         return openPaths;
     }
 
-    public int[] peekForward() {
-        if (facingNorth) {
-            return new int[]{position[0] - 1, position[1]};
-        } else if (facingSouth) {
-            return new int[]{position[0] + 1, position[1]};
-        } else if (facingEast) {
-            return new int[]{position[0], position[1] + 1};
-        } else if (facingWest) {
-            return new int[]{position[0], position[1] - 1};
-        }
-        return position;
-    }
-
-    public int[] peekLeft() {
-        if (facingNorth) {
-            return new int[]{position[0], position[1] - 1};
-        } else if (facingSouth) {
-            return new int[]{position[0], position[1] + 1};
-        } else if (facingEast) {
-            return new int[]{position[0] + 1, position[1]};
-        } else if (facingWest) {
-            return new int[]{position[0] - 1, position[1]};
-        }
-        return position;
-    }
-
-    public int[] peekRight() {
-        if (facingNorth) {
-            return new int[]{position[0], position[1] + 1};
-        } else if (facingSouth) {
-            return new int[]{position[0], position[1] - 1};
-        } else if (facingEast) {
-            return new int[]{position[0] - 1, position[1]};
-        } else if (facingWest) {
-            return new int[]{position[0] + 1, position[1]};
-        }
-        return position;
-    }
-
     public String[] getPath() {
         return CanonizedPath.split("");
-    }
-
-    public void moveForward() {
-        if (facingNorth) {
-            position[0]--;
-        } else if (facingSouth) {
-            position[0]++;
-        } else if (facingEast) {
-            position[1]++;
-        } else if (facingWest) {
-            position[1]--;
-        }
-        addPath("F");
     }
 
     public void turnLeft() {
@@ -234,28 +182,5 @@ public class MazeRunner {
         addPath("R");
     }
 
-    public int[] getPosition() {
-        return position;
-    }
 
-    public void setPosition(int[] newPosition) {
-        position = newPosition;
-    }
-
-    public String getFactorizedPath(){
-        String FactorizedPath="";
-        String target="";
-        int repeats=0;
-        for(int i=0;i<CanonizedPath.length()-1;i++){
-            if(target==CanonizedPath.substring(i,i+1)){
-                repeats++;
-            }
-            else{
-                FactorizedPath+=repeats+""+target;
-                target=CanonizedPath.substring(i,i+1);
-                repeats=1;
-            }
-        }
-        return FactorizedPath;
-    }
 }

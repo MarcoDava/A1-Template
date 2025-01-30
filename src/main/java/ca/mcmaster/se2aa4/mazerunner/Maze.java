@@ -62,24 +62,6 @@ public class Maze {
         }
     }
 
-    public int[] getEntryPoint() {
-        for (int i = 0; i < mazeArray.length; i++) {
-            if (mazeArray[i][0].equals(" ")) {
-                return new int[]{i, 0};
-            }
-        }
-        return null;
-    }
-
-    // public int[] getExitPoint() {
-    //     for (int i = 0; i < mazeArray.length; i++) {
-    //         if (mazeArray[i][mazeArray[i].length - 1].equals(" ")) {
-    //             return new int[]{i, mazeArray[i].length - 1};
-    //         }
-    //     }
-    //     return null;
-    // }
-
     public int getRowLength(){
         return mazeArray.length;
     }
