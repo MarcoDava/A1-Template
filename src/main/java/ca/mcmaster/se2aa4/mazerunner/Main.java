@@ -1,8 +1,12 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.commons.cli.*;
 
 public class Main {
 
@@ -14,6 +18,7 @@ public class Main {
         logger.info("** Starting Maze Runner");
         Options options = new Options();
         options.addOption("i", true, "input file");
+        options.addOption("p", true, "input path"); 
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -22,13 +27,22 @@ public class Main {
                 String inputFile = cmd.getOptionValue("i");
                 logger.info("**** Reading the maze from file " + inputFile);
                 maze = new Maze(inputFile);
-                mazeRunner = new MazeRunner(maze);
-                if (mazeRunner.MazeRunnerAlgorithm()) {
-                    logger.info("Maze solved successfully.");
-                } else {
-                    logger.info("Failed to solve the maze.");
+                
+                if(cmd.hasOption("p")){
+                    String inputMoves = cmd.getOptionValue("p");
+                    maze = new Maze(inputFile);
+                    logger.info(inputMoves);
+                    mazeRunner = new ManualMazeRunner(maze,inputMoves);
+                }else{
+                    mazeRunner = new AutomaticMazeRunner(maze);
                 }
-            } else {
+                if (mazeRunner.MazeRunnerAlgorithm()) {
+                        logger.info("Maze solved successfully.");
+                    } else {
+                        logger.info("Failed to solve the maze.");
+                    }
+            } 
+            else {
                 logger.error("Input file not provided. Use -i flag to specify the input file.");
             }
         } catch (ParseException e) {
