@@ -11,6 +11,22 @@ public abstract class MazeRunner {
     private Exit exit;
     private Entry entry;
 
+    public MazeRunner(Maze maze) {
+        this.maze = maze;
+        exit = new Exit(maze);
+        entry = new Entry(maze);
+        position=new Position(entry.getEntryPoint());
+    }
+
     public abstract boolean MazeRunnerAlgorithm();
+
+    public boolean isWall(int[] position) {
+        int row=position[0];
+        int col=position[1];
+        if(maze.getMazeIndex(row,col).equals("#")){
+            return true;
+        }
+        return false;
+    }
 
 }

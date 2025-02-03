@@ -16,11 +16,12 @@ public class ManualMazeRunner extends MazeRunner {
 
 
     public ManualMazeRunner(Maze maze,String inputMoves) {
+        super(maze);
         this.inputMoves=inputMoves;
         this.maze = maze;
-        exit = new Exit(maze);
-        entry = new Entry(maze);
-        position=new Position(entry.getEntryPoint());
+        this.exit = new Exit(maze);
+        this.entry = new Entry(maze);
+        this.position = new Position(entry.getEntryPoint());
     }
 
 
@@ -54,13 +55,5 @@ public class ManualMazeRunner extends MazeRunner {
         logger.info("Maze has not been solved");
         return false;
         
-    }
-    public boolean isWall(int[] position) {
-        int row=position[0];
-        int col=position[1];
-        if(maze.getMazeIndex(row,col).equals("#")){
-            return true;
-        }
-        return false;
     }
 }

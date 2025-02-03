@@ -13,6 +13,7 @@ public class AutomaticMazeRunner extends MazeRunner {
     private Exit exit;
     private Entry entry;
     public AutomaticMazeRunner(Maze maze) {
+        super(maze);
         this.maze = maze;
         exit = new Exit(maze);
         entry = new Entry(maze);
@@ -56,13 +57,5 @@ public class AutomaticMazeRunner extends MazeRunner {
             logger.info("Maze has not been solved");
             return false;
         }
-    }
-    public boolean isWall(int[] position) {
-        int row=position[0];
-        int col=position[1];
-        if(maze.getMazeIndex(row,col).equals("#")){
-            return true;
-        }
-        return false;
     }
 }
