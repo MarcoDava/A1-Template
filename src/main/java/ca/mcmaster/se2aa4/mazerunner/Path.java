@@ -13,20 +13,27 @@ public class Path {
         }
     }
 
+    public String getCanonizedPath() {
+        return CanonizedPath;
+    }
+
     public String getFactorizedPath(){
         String FactorizedPath="";
         String target="";
         int repeats=0;
-        for(int i=0;i<CanonizedPath.length()-1;i++){
-            if(target==CanonizedPath.substring(i,i+1)){
+        for(int i=0;i<CanonizedPath.length();i++){
+            if(target.equals(CanonizedPath.substring(i,i+1))){
                 repeats++;
             }
             else{
-                FactorizedPath+=repeats+""+target;
+                if(!target.equals("")){
+                    FactorizedPath+=repeats+""+target;
+                }
                 target=CanonizedPath.substring(i,i+1);
                 repeats=1;
             }
         }
+        FactorizedPath+=repeats+""+target;
         return FactorizedPath;
     }
 }

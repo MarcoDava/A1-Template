@@ -1,57 +1,60 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.util.Arrays;
 
 public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
-    private String CanonizedPath = "";
-    private Position position=new Position();
+    private Path path=new Path();
+    private Position position;
     private Maze maze;
-    private Exit exit=new Exit(maze);
+    private Exit exit;
+    private Entry entry;
 
     public MazeRunner(Maze maze) {
         this.maze = maze;
+        exit = new Exit(maze);
+        entry = new Entry(maze);
+        position=new Position(entry.getEntryPoint());
     }
 
     public boolean MazeRunnerAlgorithm() {
-
-        while (exit.getExitPoint()!=position.getPosition()) {
+        boolean atEnd = false;
+        while (!atEnd) {
             if (!isWall(position.peekRight())) {
                 position.turnRight();
                 position.moveForward();
+                path.addPath("RF");
             }
             else if(!isWall(position.peekForward())){
                 position.moveForward();
+                path.addPath("F");
             }
             else if(!isWall(position.peekLeft())){
                 position.turnLeft();
                 position.moveForward();
+                path.addPath("LF");
             }
-            else if(isDeadend(position.getPosition())){
+            else{
                 position.turnLeft();
                 position.turnLeft();
+                position.moveForward();
+                path.addPath("LLF");
             }
-            
+            logger.info("Current position: " + Arrays.toString(position.getPosition()));
+            if(Arrays.equals(exit.getExitPoint(),position.getPosition())){
+                atEnd=true;
+            }
         }
-        if (position.getPosition()==exit.getExitPoint()) {
+        if (Arrays.equals(position.getPosition(),exit.getExitPoint())) {
             logger.info("Maze has been solved");
-            logger.info("Path: " + CanonizedPath);
+            logger.info("Path: " + path.getFactorizedPath());
             return true;
         } else {
             logger.info("Maze has not been solved");
             return false;
-        }
-    }
-
-    public void addPath(String value) {
-        CanonizedPath = CanonizedPath + value;
-    }
-
-    public void deletePath() {
-        if (CanonizedPath != null && CanonizedPath.length() > 0) {
-            CanonizedPath = CanonizedPath.substring(0, CanonizedPath.length() - 1);
         }
     }
 
@@ -85,34 +88,5 @@ public class MazeRunner {
 
     public boolean isFinish(int[] position) {
         return Arrays.equals(position, exit.getExitPoint());
-    }
-
-    // public boolean isFork(int[] position){
-    //     int openPaths = amountOfPaths(position);
-    //     if(openPaths>2){
-    //         forkLocations.addForkLocations(position);
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-
-    public int amountOfPaths(int[] position) {
-        int row = position[0];
-        int col = position[1];
-        int openPaths = 0;
-        if (row > 0 && !isWall(new int[]{row - 1, col})) {
-            openPaths++;
-        }
-        if (col > 0 && !isWall(new int[]{row, col - 1})) {
-            openPaths++;
-        }
-        if (row < maze.getRowLength() - 1 && !isWall(new int[]{row + 1, col})) {
-            openPaths++;
-        }
-        if (col < maze.getColLength() - 1 && !isWall(new int[]{row, col + 1})) {
-            openPaths++;
-        }
-        return openPaths;
     }
 }

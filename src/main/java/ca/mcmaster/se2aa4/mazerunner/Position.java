@@ -3,6 +3,10 @@ package ca.mcmaster.se2aa4.mazerunner;
 public class Position{
     private int[] position;
     private Direction direction = Direction.EAST;
+
+    Position(int[] position) {
+        this.position = position;
+    }
     
     public void setPosition(int[] newPosition) {
         position = newPosition;
@@ -29,22 +33,22 @@ public class Position{
         } else if (direction.equals(Direction.SOUTH)) {
             return new int[]{position[0], position[1] + 1};
         } else if (direction.equals(Direction.EAST)) {
-            return new int[]{position[0] + 1, position[1]};
-        } else if (direction.equals(Direction.WEST)) {
             return new int[]{position[0] - 1, position[1]};
+        } else if (direction.equals(Direction.WEST)) {
+            return new int[]{position[0] + 1, position[1]};
         }
         return position;
     }
 
     public int[] peekRight() {
         if (direction.equals(Direction.NORTH)) {
-            return new int[]{position[0], position[1] - 1};
+            return new int[]{position[0], position[1] + 1};
         } else if (direction.equals(Direction.SOUTH)) {
             return new int[]{position[0], position[1] - 1};
         } else if (direction.equals(Direction.EAST)) {
-            return new int[]{position[0] - 1, position[1]};
-        } else if (direction.equals(Direction.WEST)) {
             return new int[]{position[0] + 1, position[1]};
+        } else if (direction.equals(Direction.WEST)) {
+            return new int[]{position[0] - 1, position[1]};
         }
         return position;
     }
@@ -67,9 +71,9 @@ public class Position{
         } else if (direction.equals(Direction.SOUTH)) {
             direction=Direction.WEST;
         } else if (direction.equals(Direction.EAST)) {
-            direction=Direction.NORTH;
-        } else if (direction.equals(Direction.WEST)) {
             direction=Direction.SOUTH;
+        } else if (direction.equals(Direction.WEST)) {
+            direction=Direction.NORTH;
         }
     }
 
